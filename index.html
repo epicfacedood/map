@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet</title>
+
+    <!--LEAFLET CSS-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+    <style>
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+</body>
+</html>
+
+
+<!--LEAFLET JS-->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+<script>
+
+    //Map Initialization 
+
+    var map = L.map('map').setView([1.3466, 103.8433], 20);
+
+    //osm layer  
+
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+
+    osm.addTo(map)
+     
+
+    //google street
+    googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+    });
+
+    //googleStreets.addTo(map)
+
+    //googlesatellite
+
+    googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+    });
+
+    //dark
+
+    dark = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+	maxZoom: 20,
+	attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+});
+
+    googleSat.addTo(map)
+
+    //Marker
+     
+
+
+    var myIcon = L.icon({
+    iconUrl: 'redicon.png',
+    iconSize: [40, 40],
+    });
+
+    L.marker([1.3466, 103.8433]).addTo(map);
+    //var singlemarker = L.marker([1.3466, 103.8433],{icon: myIcon,draggable:true});
+    var singlemarker = L.marker([1.3466, 103.8433]);
+    var popup = singlemarker.bindPopup("This is RI!" + singlemarker.getLatLng()).openPopup()
+    //popup.addTo(map);
+    //var secondmarker = L.marker([2.3466, 104.8433],{icon: myIcon,draggable:true});
+    var secondmarker = L.marker([2.3466, 104.8433]);
+    //var thirdmarker = L.marker([3.3466, 105.8433]);
+
+  
+
+    console.log(singlemarker.toGeoJSON())
+
+    
+
+    //LAYER CONTROLLER
+
+    var baseMaps = {
+    "Open Street Map": osm,
+    "Google Street View": googleStreets,
+    "Google Satellite View": googleSat,
+    "Dark Mode": dark
+    };
+
+    var overlayMaps = {
+        "First Marker": singlemarker, 
+        "Second Marker": secondmarker,
+  
+       
+    };
+
+    map.removeLayer(singlemarker)
+
+    L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+    
+    geojsonLayer.addTo(map);
+</script>
