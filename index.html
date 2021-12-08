@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leaflet</title>
+    <script src="leaflet.ajax.min.js"></script>
+  
 
     <!--LEAFLET CSS-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
@@ -24,6 +27,7 @@
 </body>
 </html>
 
+<script src="leaflet.ajax.min.js"></script>
 
 <!--LEAFLET JS-->
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
@@ -32,16 +36,28 @@
 
     //Map Initialization 
 
-    var map = L.map('map').setView([1.3466, 103.8433], 20);
+    var map = L.map('map').setView([1.3460, 103.8420], 19);
 
     //osm layer  
-
     var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     });
 
     osm.addTo(map)
-     
+
+    //google hybrid 
+
+    googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
+
+    //google terrain 
+
+    googleTerrain = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
 
     //google street
     googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
@@ -49,68 +65,299 @@
     subdomains:['mt0','mt1','mt2','mt3']
     });
 
-    //googleStreets.addTo(map)
-
     //googlesatellite
-
     googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
     maxZoom: 20,
     subdomains:['mt0','mt1','mt2','mt3']
     });
 
-    //dark
+    googleSat.addTo(map)
 
+    //dark
     dark = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
 	maxZoom: 20,
 	attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
 });
 
-    googleSat.addTo(map)
-
     //Marker
-     
-
-
     var myIcon = L.icon({
     iconUrl: 'redicon.png',
     iconSize: [40, 40],
     });
 
-    L.marker([1.3466, 103.8433]).addTo(map);
     //var singlemarker = L.marker([1.3466, 103.8433],{icon: myIcon,draggable:true});
     var singlemarker = L.marker([1.3466, 103.8433]);
     var popup = singlemarker.bindPopup("This is RI!" + singlemarker.getLatLng()).openPopup()
+    //singlemarker.addTo(map);
     //popup.addTo(map);
     //var secondmarker = L.marker([2.3466, 104.8433],{icon: myIcon,draggable:true});
-    var secondmarker = L.marker([2.3466, 104.8433]);
-    //var thirdmarker = L.marker([3.3466, 105.8433]);
 
-  
+    var geojson = {
+"type": "FeatureCollection",
+"name": "RIMap",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "fid": 73, "Name": "Hockey Field", "Observer": "A", "Notes": null, "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.8408394782725, 1.346409158511031 ] } },
+{ "type": "Feature", "properties": { "fid": 74, "Name": "Indoor Sports Hall", "Observer": "A", "Notes": null, "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.840558760013437, 1.346048264383774 ] } },
+{ "type": "Feature", "properties": { "fid": 75, "Name": "PE Department", "Observer": "A", "Notes": "Level 2, Block K", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.840504023254184, 1.345913850506767 ] } },
+{ "type": "Feature", "properties": { "fid": 76, "Name": "Cages", "Observer": "A", "Notes": "Block L", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.840444036449725, 1.345555263524758 ] } },
+{ "type": "Feature", "properties": { "fid": 77, "Name": "Cages ", "Observer": "A", "Notes": "Block L", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.840656185510042, 1.34540397908041 ] } },
+{ "type": "Feature", "properties": { "fid": 78, "Name": "Multi-Purpose Hall", "Observer": "A", "Notes": "Level 2, Block L", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.840362237920843, 1.345303597951674 ] } },
+{ "type": "Feature", "properties": { "fid": 79, "Name": "Physical Education Equipment/Storeroom (General Store 2)", "Observer": "A", "Notes": "1, L", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.840197007531856, 1.34548454632966 ] } },
+{ "type": "Feature", "properties": { "fid": 80, "Name": "E W Barker Institute of Sports Sports Science Laboratory", "Observer": "A", "Notes": "1, L", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.840186172285641, 1.345373352577316 ] } },
+{ "type": "Feature", "properties": { "fid": 81, "Name": "E W Barker Institute of Sports Sports Physiotherapy Laboratory ", "Observer": "A", "Notes": "1, L", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.840172089301987, 1.345275637956311 ] } },
+{ "type": "Feature", "properties": { "fid": 82, "Name": "Gym", "Observer": "A", "Notes": "1, L", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.84028058570388, 1.345225386344871 ] } },
+{ "type": "Feature", "properties": { "fid": 83, "Name": "Chinese Orchestra Room", "Observer": "A", "Notes": "1, L", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.840335149181286, 1.345158592313258 ] } },
+{ "type": "Feature", "properties": { "fid": 84, "Name": "Chinese Orchestra Store", "Observer": "A", "Notes": "1, L", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.840508617894685, 1.345212096184409 ] } },
+{ "type": "Feature", "properties": { "fid": 85, "Name": "Performing Arts Centre", "Observer": "A", "Notes": "2, J", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.840966005649477, 1.345564394405301 ] } },
+{ "type": "Feature", "properties": { "fid": 86, "Name": "LT 6", "Observer": "A", "Notes": "3, J", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.840999764840802, 1.345679298948828 ] } },
+{ "type": "Feature", "properties": { "fid": 87, "Name": "Tutorial Room J36", "Observer": "A", "Notes": "3, J", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841099638925144, 1.345614478235475 ] } },
+{ "type": "Feature", "properties": { "fid": 88, "Name": "Tutorial Room J31", "Observer": "A", "Notes": "3, J", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841142535737831, 1.345791204354801 ] } },
+{ "type": "Feature", "properties": { "fid": 89, "Name": "Tutorial Room J32", "Observer": "A", "Notes": "3, J", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841137350333099, 1.34575031789205 ] } },
+{ "type": "Feature", "properties": { "fid": 90, "Name": "Tutorial Room 33", "Observer": "A", "Notes": "3, J", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841127862374421, 1.345718157376797 ] } },
+{ "type": "Feature", "properties": { "fid": 91, "Name": "Tutorial Room 34", "Observer": "A", "Notes": "3, J", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841126243746274, 1.345692141772607 ] } },
+{ "type": "Feature", "properties": { "fid": 92, "Name": "Tutorial Room 35", "Observer": "A", "Notes": "3, J", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841120485823367, 1.345660309102299 ] } },
+{ "type": "Feature", "properties": { "fid": 93, "Name": "Tutorial Room 38", "Observer": "A", "Notes": "3, J", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841023404544927, 1.345797287809679 ] } },
+{ "type": "Feature", "properties": { "fid": 94, "Name": "Tutorial Room 37", "Observer": "A", "Notes": "3, J", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841017601722569, 1.345763708932863 ] } },
+{ "type": "Feature", "properties": { "fid": 95, "Name": "Basketball Courts", "Observer": "A ", "Notes": "1", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841502216212419, 1.345497386645126 ] } },
+{ "type": "Feature", "properties": { "fid": 96, "Name": "Tennis Courts", "Observer": "A", "Notes": "2, G", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841981988501487, 1.345509384736934 ] } },
+{ "type": "Feature", "properties": { "fid": 97, "Name": "Estate Office", "Observer": "A", "Notes": "1, G", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841759275605327, 1.345575496685863 ] } },
+{ "type": "Feature", "properties": { "fid": 98, "Name": "HP Canteen", "Observer": "A", "Notes": "2, F", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841501500682938, 1.345911651682467 ] } },
+{ "type": "Feature", "properties": { "fid": 99, "Name": "Parade Square", "Observer": "A", "Notes": "2, E", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841845701308912, 1.345904574536198 ] } },
+{ "type": "Feature", "properties": { "fid": 100, "Name": "Dance Studio", "Observer": "A", "Notes": "3, K", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.840430106758191, 1.34603370484953 ] } },
+{ "type": "Feature", "properties": { "fid": 101, "Name": "Raffles Guidance Centre", "Observer": "A", "Notes": "1M, H", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841134919354829, 1.346463894378433 ] } },
+{ "type": "Feature", "properties": { "fid": 102, "Name": "College Admissions Counselling Office", "Observer": "A", "Notes": "1M, H", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841077304236379, 1.346281674766149 ] } },
+{ "type": "Feature", "properties": { "fid": 103, "Name": "Gryphon Square", "Observer": "A", "Notes": "1", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.840751676586223, 1.345805801015122 ] } },
+{ "type": "Feature", "properties": { "fid": 104, "Name": "Heads of Department (HOD)", "Observer": "A", "Notes": "2, H", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841173815740305, 1.346381669835565 ] } },
+{ "type": "Feature", "properties": { "fid": 105, "Name": "Staff Room", "Observer": "A", "Notes": "3, H", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841175611438487, 1.34633419288423 ] } },
+{ "type": "Feature", "properties": { "fid": 106, "Name": "Shaw Foundation Library", "Observer": "A", "Notes": "4, H", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.8412666107604, 1.346344205296067 ] } },
+{ "type": "Feature", "properties": { "fid": 107, "Name": "Innovation Centre", "Observer": "A", "Notes": "1, H", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841100755665664, 1.346421790000207 ] } },
+{ "type": "Feature", "properties": { "fid": 108, "Name": "MLEP Room", "Observer": "A", "Notes": "1, H", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841166121019484, 1.346231771795667 ] } },
+{ "type": "Feature", "properties": { "fid": 109, "Name": "Raffles Meeting Room", "Observer": "A", "Notes": "1, H", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841295899107294, 1.346247915656092 ] } },
+{ "type": "Feature", "properties": { "fid": 110, "Name": "Raffles Leadership Institute", "Observer": "A", "Notes": "1, H", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841160985912722, 1.346484891287668 ] } },
+{ "type": "Feature", "properties": { "fid": 111, "Name": "Chill", "Observer": "A", "Notes": "1, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841704448729971, 1.346403490650679 ] } },
+{ "type": "Feature", "properties": { "fid": 112, "Name": "Canteen", "Observer": "A", "Notes": "1, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841859295176548, 1.346218172252714 ] } },
+{ "type": "Feature", "properties": { "fid": 113, "Name": "Photocopy Shop", "Observer": "A", "Notes": "1, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.84196757682416, 1.346398133089848 ] } },
+{ "type": "Feature", "properties": { "fid": 114, "Name": "Student Affairs Centre", "Observer": "A", "Notes": "1, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.842076278609795, 1.346397314919384 ] } },
+{ "type": "Feature", "properties": { "fid": 115, "Name": "REN.CO", "Observer": "A", "Notes": "2, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.842055741979934, 1.346397986180721 ] } },
+{ "type": "Feature", "properties": { "fid": 116, "Name": "Stamford Room", "Observer": "A", "Notes": "2, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841644092235939, 1.346399947823216 ] } },
+{ "type": "Feature", "properties": { "fid": 117, "Name": "D23", "Observer": "A", "Notes": "2, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841550524475025, 1.346411426493477 ] } },
+{ "type": "Feature", "properties": { "fid": 118, "Name": "D23", "Observer": "A", "Notes": "2, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.8415681725442, 1.346405757407826 ] } },
+{ "type": "Feature", "properties": { "fid": 119, "Name": "D22", "Observer": "A", "Notes": "2, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841527516711693, 1.346382769478898 ] } },
+{ "type": "Feature", "properties": { "fid": 120, "Name": "RDS Lite (D1/D2)", "Observer": "A", "Notes": "2, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841713899051655, 1.346348412157086 ] } },
+{ "type": "Feature", "properties": { "fid": 121, "Name": "Wishing Well", "Observer": "A", "Notes": "3, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841640898758016, 1.346339663544593 ] } },
+{ "type": "Feature", "properties": { "fid": 122, "Name": "Seminar Room 7", "Observer": "A", "Notes": "3, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841751436872755, 1.346401490258663 ] } },
+{ "type": "Feature", "properties": { "fid": 123, "Name": "Seminar Room 6", "Observer": "A", "Notes": "3, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841789996783191, 1.346400011558923 ] } },
+{ "type": "Feature", "properties": { "fid": 124, "Name": "Seminar Room 5", "Observer": "A", "Notes": "3, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841832957950402, 1.346400011408587 ] } },
+{ "type": "Feature", "properties": { "fid": 125, "Name": "OpenLab", "Observer": "A", "Notes": "1M, E", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.842278485570532, 1.346159011091782 ] } },
+{ "type": "Feature", "properties": { "fid": 126, "Name": "Physics Lab 3", "Observer": "A", "Notes": "1M, E", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.84228082721944, 1.346080421334425 ] } },
+{ "type": "Feature", "properties": { "fid": 127, "Name": "Popular ", "Observer": "A ", "Notes": "1", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.84281236557274, 1.346539474589901 ] } },
+{ "type": "Feature", "properties": { "fid": 128, "Name": "Stamford Training Room", "Observer": "A", "Notes": "1", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.842950292765778, 1.346536284802659 ] } },
+{ "type": "Feature", "properties": { "fid": 129, "Name": "Professor Brawn Cafe", "Observer": "A", "Notes": "1", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.84309196108947, 1.346531693479074 ] } },
+{ "type": "Feature", "properties": { "fid": 130, "Name": "Raffles Discovery Studio (A1)", "Observer": "A", "Notes": "1, A", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.843366734211543, 1.346372023716403 ] } },
+{ "type": "Feature", "properties": { "fid": 131, "Name": "Raffles Discovery Studio A2", "Observer": "A", "Notes": "1, A", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.843283154080211, 1.346376856835478 ] } },
+{ "type": "Feature", "properties": { "fid": 132, "Name": "Theatre Study Room", "Observer": "A", "Notes": "1, A", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.843185563718379, 1.346373175861884 ] } },
+{ "type": "Feature", "properties": { "fid": 133, "Name": "Windy Benches", "Observer": "A", "Notes": "1, A", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.843111272096522, 1.346262889166753 ] } },
+{ "type": "Feature", "properties": { "fid": 134, "Name": "Lecture Theatre 2", "Observer": "A", "Notes": "1, C", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.842562599796793, 1.346255204330666 ] } },
+{ "type": "Feature", "properties": { "fid": 135, "Name": "Lecture Theatre 1", "Observer": "A", "Notes": "1, C", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.842626551008749, 1.346532613354218 ] } },
+{ "type": "Feature", "properties": { "fid": 136, "Name": "Lecture Theatre 3", "Observer": "A", "Notes": "3, A", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.843027559017287, 1.346387705904724 ] } },
+{ "type": "Feature", "properties": { "fid": 137, "Name": "Lecture Theatre 4 ", "Observer": "A", "Notes": "3, B", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.843201788818035, 1.34667372484205 ] } },
+{ "type": "Feature", "properties": { "fid": 138, "Name": "Lecture Theatre 5 ", "Observer": "A", "Notes": "3, B", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.843044638995266, 1.346672607752831 ] } },
+{ "type": "Feature", "properties": { "fid": 139, "Name": "Computer Lab 8", "Observer": "A", "Notes": "4, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.84192091536687, 1.346328236523593 ] } },
+{ "type": "Feature", "properties": { "fid": 140, "Name": "Computer Lab 7", "Observer": "A", "Notes": "4, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.84185802797596, 1.346330427034413 ] } },
+{ "type": "Feature", "properties": { "fid": 141, "Name": "Computer Lab 6", "Observer": "A", "Notes": "4, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841814872776297, 1.346328286048015 ] } },
+{ "type": "Feature", "properties": { "fid": 142, "Name": "Computer Lab 5", "Observer": "A", "Notes": "4, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841775683405643, 1.346328718372025 ] } },
+{ "type": "Feature", "properties": { "fid": 143, "Name": "Computer Lab 4", "Observer": "A", "Notes": "4, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841744062692825, 1.346326403729161 ] } },
+{ "type": "Feature", "properties": { "fid": 144, "Name": "Computer Lab 3", "Observer": "A", "Notes": "4, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841712934833012, 1.346323109555561 ] } },
+{ "type": "Feature", "properties": { "fid": 145, "Name": "Computer Lab 2", "Observer": "A", "Notes": "4, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841684886524902, 1.346324525127205 ] } },
+{ "type": "Feature", "properties": { "fid": 146, "Name": "IT Office", "Observer": "A", "Notes": "4, D", "Date": "2021-12-03", "Type": null }, "geometry": { "type": "Point", "coordinates": [ 103.841627979459801, 1.346322087777415 ] } }
+]
+}; 
 
-    console.log(singlemarker.toGeoJSON())
-
+    var geo = L.geoJSON(geojson);
     
+    for (var i=0; i < (geojson["features"].length); i++ ) {
+        var temp_coordinates = [geojson["features"][i]["geometry"]["coordinates"][1],geojson["features"][i]["geometry"]["coordinates"][0]];
+        var temp_name = geojson["features"][i]["properties"]["Name"];
+        var temp_marker = new L.marker(temp_coordinates);
+        temp_marker.bindTooltip(String(temp_name),{permanent: true, className:"My-label", offset: [0,0]});
+        temp_marker.addTo(geo);
+}
+
+    var blocklayergeojson = {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[103.84106344, 1.34659295], [103.84100765, 1.34655541], [103.84096742, 1.34648462], [103.84094543, 1.34641812], [103.84095508, 1.34633875], [103.84098191, 1.34628351], [103.84103126, 1.34623256], [103.84109724, 1.34619449], [103.84117449, 1.34618966], [103.84124101, 1.34620736], [103.84130055, 1.34624436], [103.84135259, 1.34631193], [103.84136814, 1.34638433], [103.84136278, 1.34645781], [103.84133006, 1.34652431], [103.84127695, 1.34657686], [103.84120989, 1.34660529], [103.84113479, 1.34661279], [103.84106344, 1.34659295]]]}, "id": "99e6bf1f-bf38-41d2-8c11-97273919ac4c", "properties": {"name": "Block H"}}]}
+    var blocklayer = L.geoJSON(blocklayergeojson)
+    
+    var ri = {
+    "type": "FeatureCollection",
+    "features": [{
+        "type": "Feature",
+        "properties": {
+            "shape": "Polygon",
+            "name": "Unnamed Layer",
+            "category": "default"
+        },
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+                [
+                    [103.840982, 1.346484],
+                    [103.84094, 1.346351],
+                    [103.84101, 1.34626],
+                    [103.841096, 1.346222],
+                    [103.841219, 1.346206],
+                    [103.841342, 1.34627],
+                    [103.84138, 1.346399],
+                    [103.841342, 1.346506],
+                    [103.841273, 1.34656],
+                    [103.841198, 1.346608],
+                    [103.84109, 1.346603],
+                    [103.841014, 1.346554],
+                    [103.840982, 1.346484]
+                ]
+            ]
+        },
+        "id": "f2b24926-26db-4b44-b5f9-b4e8a13ab1f3"
+    }, {
+        "type": "Feature",
+        "properties": {
+            "shape": "Polygon",
+            "name": "Unnamed Layer",
+            "category": "default"
+        },
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+                [
+                    [103.842384, 1.346581],
+                    [103.842298, 1.346517],
+                    [103.84225, 1.346426],
+                    [103.84226, 1.346249],
+                    [103.842384, 1.346142],
+                    [103.842529, 1.346088],
+                    [103.842647, 1.346136],
+                    [103.842706, 1.346174],
+                    [103.842754, 1.346303],
+                    [103.842749, 1.346469],
+                    [103.842652, 1.346549],
+                    [103.842539, 1.346598],
+                    [103.842384, 1.346581]
+                ]
+            ]
+        },
+        "id": "f489d4ef-ae22-462f-b108-93b1f4b7dd71"
+    }, {
+        "type": "Feature",
+        "properties": {
+            "shape": "Polygon",
+            "name": "Unnamed Layer",
+            "category": "default"
+        },
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+                [
+                    [103.840355, 1.346083],
+                    [103.840489, 1.345815],
+                    [103.840806, 1.34604],
+                    [103.840725, 1.346206],
+                    [103.840355, 1.346083]
+                ]
+            ]
+        },
+        "id": "31af341b-ebb2-4e7d-a7de-b093aa6cb351"
+    }, {
+        "type": "Feature",
+        "properties": {
+            "shape": "Polygon",
+            "name": "Unnamed Layer",
+            "category": "default"
+        },
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+                [
+                    [103.841396, 1.346174],
+                    [103.841391, 1.345917],
+                    [103.841605, 1.345922],
+                    [103.841595, 1.346185],
+                    [103.841396, 1.346174]
+                ]
+            ]
+        },
+        "id": "508e8932-3969-4848-86ed-124adb2e6430"
+    }, {
+        "type": "Feature",
+        "properties": {
+            "shape": "Polygon",
+            "name": "Unnamed Layer",
+            "category": "default"
+        },
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+                [
+                    [103.842072, 1.346249],
+                    [103.842078, 1.34596],
+                    [103.841992, 1.345874],
+                    [103.842019, 1.345842],
+                    [103.842035, 1.345777],
+                    [103.842067, 1.345804],
+                    [103.842089, 1.345756],
+                    [103.842142, 1.345815],
+                    [103.842271, 1.345884],
+                    [103.842244, 1.346185],
+                    [103.842298, 1.346217],
+                    [103.842072, 1.346249]
+                ]
+            ]
+        },
+        "id": "6bab10ff-a54b-40c6-b1d9-b54339f7e90a"
+    }]
+}
+    var ris = L.geoJSON(ri);
+
+    var OffsetTileLayer = L.TileLayer.extend({
+        _getTilePos: function (coords) {
+            var pos = L.TileLayer.prototype._getTilePos.call(this, coords);
+            return pos.add([101230, 125]);
+    },
+});
+
+    var offsetTileLayer = new OffsetTileLayer(googleSat);
+    //offsetTileLayer.addTo(map);
+ 
+
+
+
+    //console.log(singlemarker.toGeoJSON());
+
+
 
     //LAYER CONTROLLER
 
     var baseMaps = {
     "Open Street Map": osm,
+    "Google Satellite View": offsetTileLayer,
     "Google Street View": googleStreets,
-    "Google Satellite View": googleSat,
-    "Dark Mode": dark
+    "Dark Mode": dark,
+    "hybrid google": googleHybrid,
+    "terrain google": googleTerrain
     };
 
     var overlayMaps = {
         "First Marker": singlemarker, 
-        "Second Marker": secondmarker,
-  
-       
+        "geo": geo,
+        "bbb": blocklayer,
+        "ri2": ris
+    
+
     };
+
+    var tool = L.tooltip 
 
     map.removeLayer(singlemarker)
 
     L.control.layers(baseMaps, overlayMaps).addTo(map);
 
     
-    geojsonLayer.addTo(map);
 </script>
