@@ -5,11 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leaflet</title>
-    <script src="leaflet.ajax.min.js"></script>
+    
   
 
     <!--LEAFLET CSS-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.76.0/dist/L.Control.Locate.min.css" />
+    <link rel="stylesheet" href="https://opengeo.tech/maps/leaflet-search/src/leaflet-search.css" />
+    <link rel="stylesheet" href="https://opengeo.tech/maps/leaflet-search/examples/style.css" />
     <style>
 
         body {
@@ -27,11 +30,12 @@
 </body>
 </html>
 
-<script src="leaflet.ajax.min.js"></script>
+
 
 <!--LEAFLET JS-->
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-
+<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.76.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+<script src="https://opengeo.tech/maps/leaflet-search/src/leaflet-search.js"></script>
 <script>
 
     //Map Initialization 
@@ -44,20 +48,6 @@
     });
 
     osm.addTo(map)
-
-    //google hybrid 
-
-    googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
-    maxZoom: 20,
-    subdomains:['mt0','mt1','mt2','mt3']
-});
-
-    //google terrain 
-
-    googleTerrain = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
-    maxZoom: 20,
-    subdomains:['mt0','mt1','mt2','mt3']
-});
 
     //google street
     googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
@@ -79,6 +69,19 @@
 	attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
 });
 
+    //esri world map
+    var Esri_WorldStreetMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+});
+
+    //thunderstorm
+
+    var Thunderforest_OpenCycleMap = L.tileLayer('https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey={apikey}', {
+	attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	apikey: 'e9d8b36574ba44cfac8988ba51867080',
+	maxZoom: 22
+});
+
     //Marker
     var myIcon = L.icon({
     iconUrl: 'redicon.png',
@@ -91,6 +94,17 @@
     //singlemarker.addTo(map);
     //popup.addTo(map);
     //var secondmarker = L.marker([2.3466, 104.8433],{icon: myIcon,draggable:true});
+
+
+
+
+
+/*//////////////////////////////////////////// 
+
+GEOJSON FILE REPOSITORY 
+
+*////////////////////////////////////////////
+
 
     var geojson = {
 "type": "FeatureCollection",
@@ -174,147 +188,399 @@
 ]
 }; 
 
-    var geo = L.geoJSON(geojson);
-    
-    for (var i=0; i < (geojson["features"].length); i++ ) {
-        var temp_coordinates = [geojson["features"][i]["geometry"]["coordinates"][1],geojson["features"][i]["geometry"]["coordinates"][0]];
-        var temp_name = geojson["features"][i]["properties"]["Name"];
-        var temp_marker = new L.marker(temp_coordinates);
-        temp_marker.bindTooltip(String(temp_name),{permanent: true, className:"My-label", offset: [0,0]});
-        temp_marker.addTo(geo);
+
+    var BLOCKH = {
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 101,
+                "Name": "Raffles Guidance Centre",
+                "Observer": "A",
+                "Notes": "1M, H",
+                "Date": "2021-12-03",
+                "Type": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.84113491935483,
+                    1.346463894378433
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 102,
+                "Name": "College Admissions Counselling Office",
+                "Observer": "A",
+                "Notes": "1M, H",
+                "Date": "2021-12-03",
+                "Type": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.84107730423638,
+                    1.346281674766149
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 104,
+                "Name": "Heads of Department (HOD)",
+                "Observer": "A",
+                "Notes": "2, H",
+                "Date": "2021-12-03",
+                "Type": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.8411738157403,
+                    1.346381669835565
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 105,
+                "Name": "Staff Room",
+                "Observer": "A",
+                "Notes": "3, H",
+                "Date": "2021-12-03",
+                "Type": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.84117561143849,
+                    1.34633419288423
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 106,
+                "Name": "Shaw Foundation Library",
+                "Observer": "A",
+                "Notes": "4, H",
+                "Date": "2021-12-03",
+                "Type": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.8412666107604,
+                    1.346344205296067
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 107,
+                "Name": "Innovation Centre",
+                "Observer": "A",
+                "Notes": "1, H",
+                "Date": "2021-12-03",
+                "Type": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.84110075566566,
+                    1.346421790000207
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 108,
+                "Name": "MLEP Room",
+                "Observer": "A",
+                "Notes": "1, H",
+                "Date": "2021-12-03",
+                "Type": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.84116612101948,
+                    1.346231771795667
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 109,
+                "Name": "Raffles Meeting Room",
+                "Observer": "A",
+                "Notes": "1, H",
+                "Date": "2021-12-03",
+                "Type": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.8412958991073,
+                    1.346247915656092
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 110,
+                "Name": "Raffles Leadership Institute",
+                "Observer": "A",
+                "Notes": "1, H",
+                "Date": "2021-12-03",
+                "Type": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.84116098591272,
+                    1.346484891287668
+                ]
+            }
+        }
+    ]
+};
+
+
+    var BLOCKL = {
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "marker-color": "#7e7e7e",
+                "marker-size": "medium",
+                "marker-symbol": "",
+                "fid": 76,
+                "Name": "Cages",
+                "Observer": "A",
+                "Notes": "1, L",
+                "Date": "2021-12-03",
+                "Type": "null"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.84044403644972,
+                    1.345555263524758
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "marker-color": "#7e7e7e",
+                "marker-size": "medium",
+                "marker-symbol": "",
+                "fid": 77,
+                "Name": "Cages ",
+                "Observer": "A",
+                "Notes": "1, L",
+                "Date": "2021-12-03",
+                "Type": "null"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.84065618551004,
+                    1.34540397908041
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "marker-color": "#7e7e7e",
+                "marker-size": "medium",
+                "marker-symbol": "",
+                "fid": 78,
+                "Name": "Multi-Purpose Hall",
+                "Observer": "A",
+                "Notes": "2, L",
+                "Date": "2021-12-03",
+                "Type": "null"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.84036223792084,
+                    1.345303597951674
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 79,
+                "Name": "Physical Education Equipment/Storeroom (General Store 2)",
+                "Observer": "A",
+                "Notes": "1, L",
+                "Date": "2021-12-03",
+                "Type": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.84019700753186,
+                    1.34548454632966
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 80,
+                "Name": "E W Barker Institute of Sports Sports Science Laboratory",
+                "Observer": "A",
+                "Notes": "1, L",
+                "Date": "2021-12-03",
+                "Type": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.84018617228564,
+                    1.345373352577316
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 81,
+                "Name": "E W Barker Institute of Sports Sports Physiotherapy Laboratory ",
+                "Observer": "A",
+                "Notes": "1, L",
+                "Date": "2021-12-03",
+                "Type": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.84017208930199,
+                    1.345275637956311
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 82,
+                "Name": "Gym",
+                "Observer": "A",
+                "Notes": "1, L",
+                "Date": "2021-12-03",
+                "Type": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.84028058570388,
+                    1.345225386344871
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 83,
+                "Name": "Chinese Orchestra Room",
+                "Observer": "A",
+                "Notes": "1, L",
+                "Date": "2021-12-03",
+                "Type": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.84033514918129,
+                    1.345158592313258
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "fid": 84,
+                "Name": "Chinese Orchestra Store",
+                "Observer": "A",
+                "Notes": "1, L",
+                "Date": "2021-12-03",
+                "Type": null
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    103.84050861789468,
+                    1.345212096184409
+                ]
+            }
+        }
+    ]
 }
+
+
+
+// DEFINING THE VARIABLES 
+
+    var geo = L.geoJSON(geojson);
+    var blockh = L.geoJSON(BLOCKH);
+    var blockl = L.geoJSON(BLOCKL);
+
+    var List = [blockh,blockl];
+
+
+
+
+/*////////////////////////////////////////////
+
+GEOJSON FILE REPOSITORY 
+
+*////////////////////////////////////////////
+
+    //FOR LOOOP, BLOCK H
+
+    for (var i=0; i < (BLOCKH["features"].length); i++ ) {
+        var temp_coordinates = [BLOCKH["features"][i]["geometry"]["coordinates"][1],BLOCKH["features"][i]["geometry"]["coordinates"][0]];
+        var temp_name = BLOCKH["features"][i]["properties"]["Name"];
+        var temp_marker = new L.marker(temp_coordinates);
+        temp_marker.bindPopup('Title: '+ temp_name + ",  Level and Block: " + BLOCKH["features"][i]["properties"]["Notes"] );
+        temp_marker.addTo(blockh);
+
+    }
+
+    //FOR LOOOP, BLOCK L
+
+    for (var i=0; i < (BLOCKL["features"].length); i++ ) {
+        var temp_coordinates = [BLOCKL["features"][i]["geometry"]["coordinates"][1],BLOCKL["features"][i]["geometry"]["coordinates"][0]];
+        var temp_name = BLOCKL["features"][i]["properties"]["Name"];
+        var temp_marker = new L.marker(temp_coordinates);
+        temp_marker.bindPopup('Title: '+ temp_name + ",  Level and Block: " + BLOCKL["features"][i]["properties"]["Notes"] );
+        temp_marker.addTo(blockl);
+    }
+
+    //GEO FOR LOOP
+   
 
     var blocklayergeojson = {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[103.84106344, 1.34659295], [103.84100765, 1.34655541], [103.84096742, 1.34648462], [103.84094543, 1.34641812], [103.84095508, 1.34633875], [103.84098191, 1.34628351], [103.84103126, 1.34623256], [103.84109724, 1.34619449], [103.84117449, 1.34618966], [103.84124101, 1.34620736], [103.84130055, 1.34624436], [103.84135259, 1.34631193], [103.84136814, 1.34638433], [103.84136278, 1.34645781], [103.84133006, 1.34652431], [103.84127695, 1.34657686], [103.84120989, 1.34660529], [103.84113479, 1.34661279], [103.84106344, 1.34659295]]]}, "id": "99e6bf1f-bf38-41d2-8c11-97273919ac4c", "properties": {"name": "Block H"}}]}
     var blocklayer = L.geoJSON(blocklayergeojson)
     
-    var ri = {
-    "type": "FeatureCollection",
-    "features": [{
-        "type": "Feature",
-        "properties": {
-            "shape": "Polygon",
-            "name": "Unnamed Layer",
-            "category": "default"
-        },
-        "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-                [
-                    [103.840982, 1.346484],
-                    [103.84094, 1.346351],
-                    [103.84101, 1.34626],
-                    [103.841096, 1.346222],
-                    [103.841219, 1.346206],
-                    [103.841342, 1.34627],
-                    [103.84138, 1.346399],
-                    [103.841342, 1.346506],
-                    [103.841273, 1.34656],
-                    [103.841198, 1.346608],
-                    [103.84109, 1.346603],
-                    [103.841014, 1.346554],
-                    [103.840982, 1.346484]
-                ]
-            ]
-        },
-        "id": "f2b24926-26db-4b44-b5f9-b4e8a13ab1f3"
-    }, {
-        "type": "Feature",
-        "properties": {
-            "shape": "Polygon",
-            "name": "Unnamed Layer",
-            "category": "default"
-        },
-        "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-                [
-                    [103.842384, 1.346581],
-                    [103.842298, 1.346517],
-                    [103.84225, 1.346426],
-                    [103.84226, 1.346249],
-                    [103.842384, 1.346142],
-                    [103.842529, 1.346088],
-                    [103.842647, 1.346136],
-                    [103.842706, 1.346174],
-                    [103.842754, 1.346303],
-                    [103.842749, 1.346469],
-                    [103.842652, 1.346549],
-                    [103.842539, 1.346598],
-                    [103.842384, 1.346581]
-                ]
-            ]
-        },
-        "id": "f489d4ef-ae22-462f-b108-93b1f4b7dd71"
-    }, {
-        "type": "Feature",
-        "properties": {
-            "shape": "Polygon",
-            "name": "Unnamed Layer",
-            "category": "default"
-        },
-        "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-                [
-                    [103.840355, 1.346083],
-                    [103.840489, 1.345815],
-                    [103.840806, 1.34604],
-                    [103.840725, 1.346206],
-                    [103.840355, 1.346083]
-                ]
-            ]
-        },
-        "id": "31af341b-ebb2-4e7d-a7de-b093aa6cb351"
-    }, {
-        "type": "Feature",
-        "properties": {
-            "shape": "Polygon",
-            "name": "Unnamed Layer",
-            "category": "default"
-        },
-        "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-                [
-                    [103.841396, 1.346174],
-                    [103.841391, 1.345917],
-                    [103.841605, 1.345922],
-                    [103.841595, 1.346185],
-                    [103.841396, 1.346174]
-                ]
-            ]
-        },
-        "id": "508e8932-3969-4848-86ed-124adb2e6430"
-    }, {
-        "type": "Feature",
-        "properties": {
-            "shape": "Polygon",
-            "name": "Unnamed Layer",
-            "category": "default"
-        },
-        "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-                [
-                    [103.842072, 1.346249],
-                    [103.842078, 1.34596],
-                    [103.841992, 1.345874],
-                    [103.842019, 1.345842],
-                    [103.842035, 1.345777],
-                    [103.842067, 1.345804],
-                    [103.842089, 1.345756],
-                    [103.842142, 1.345815],
-                    [103.842271, 1.345884],
-                    [103.842244, 1.346185],
-                    [103.842298, 1.346217],
-                    [103.842072, 1.346249]
-                ]
-            ]
-        },
-        "id": "6bab10ff-a54b-40c6-b1d9-b54339f7e90a"
-    }]
-}
-    var ris = L.geoJSON(ri);
 
     var OffsetTileLayer = L.TileLayer.extend({
         _getTilePos: function (coords) {
@@ -322,33 +588,57 @@
             return pos.add([101230, 125]);
     },
 });
+    var markersLayer = new L.LayerGroup();	//layer contain searched elements
 
-    var offsetTileLayer = new OffsetTileLayer(googleSat);
-    //offsetTileLayer.addTo(map);
- 
+	//map.addLayer(markersLayer);
+
+    var controlSearch = new L.Control.Search({
+		position:'topright',		
+		layer: markersLayer,
+		initial: false,
+		zoom: 25,
+		marker: false,
+        hideMarkerOnCollapse: true,
+		marker: {
+			icon: new L.Icon({iconUrl:'data/red3.png', iconSize: [100,100]}),
+			circle: {
+				radius: 20,
+				color: '#FF0000',
+				opacity: 1
+			}
+		}});
+
+	map.addControl(controlSearch);
 
 
+    for (var i=0; i < (geojson["features"].length); i++ ) {
+        var temp_name = geojson["features"][i]["properties"]["Name"];
+            var temp_coordinates = [geojson["features"][i]["geometry"]["coordinates"][1],geojson["features"][i]["geometry"]["coordinates"][0]];
+            var temp_marker = new L.Marker(new L.latLng(temp_coordinates), {title: temp_name} );
+		temp_marker.bindPopup('Title: '+ temp_name + ",  Level and Block: " + geojson["features"][i]["properties"]["Notes"] );
+		markersLayer.addLayer(temp_marker);
+        
+    }
 
-    //console.log(singlemarker.toGeoJSON());
 
 
 
     //LAYER CONTROLLER
 
     var baseMaps = {
-    "Open Street Map": osm,
-    "Google Satellite View": offsetTileLayer,
-    "Google Street View": googleStreets,
-    "Dark Mode": dark,
-    "hybrid google": googleHybrid,
-    "terrain google": googleTerrain
+    "Default Map": Thunderforest_OpenCycleMap,
+    "Google Satellite View": googleSat,
+    "Click to Access Blocks": Esri_WorldStreetMap,
+    "Dark Mode": dark
+
     };
 
     var overlayMaps = {
-        "First Marker": singlemarker, 
-        "geo": geo,
-        "bbb": blocklayer,
-        "ri2": ris
+        "Polygon Test": blocklayer,
+        "All Data Points": markersLayer,
+        "Block H": blockh,
+        "Block L": blockl
+        
     
 
     };
@@ -358,6 +648,7 @@
     map.removeLayer(singlemarker)
 
     L.control.layers(baseMaps, overlayMaps).addTo(map);
+    L.control.locate().addTo(map);
 
     
 </script>
